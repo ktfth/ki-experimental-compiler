@@ -17,6 +17,8 @@ tokens = (
    'DIVIDE',
    'LPAREN',
    'RPAREN',
+   'PRINT',
+   'SEMI'
 )
 
 # Regular expression rules for simple tokens
@@ -26,6 +28,8 @@ t_TIMES   = r'\*'
 t_DIVIDE  = r'/'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
+t_PRINT = r'print'
+t_SEMI = r'\;'
 
 # A regular expression rule with some action code
 def t_NUMBER(t):
@@ -83,6 +87,10 @@ def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
     p[0] = p[2]
 
+def p_statement_print(p):
+    'expression : PRINT LPAREN expression RPAREN SEMI'
+    p[0] = p[3]
+
 # Error rule for syntax errors
 def p_error(p):
     print("Syntax error in input!")
@@ -91,6 +99,6 @@ def p_error(p):
 parser = yacc.yacc()
 
 with open(sys.argv[1]) as f:
-   s = f.read()
-result = parser.parse(s)
+   data = f.read()
+result = parser.parse(data)
 print(result)
