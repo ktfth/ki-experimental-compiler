@@ -14,6 +14,8 @@ reserved = {
 
 # List of token names.   This is always required
 tokens = [
+   'ID',
+   'EQ',
    'NUMBER',
    'PLUS',
    'MINUS',
@@ -21,13 +23,13 @@ tokens = [
    'DIVIDE',
    'LPAREN',
    'RPAREN',
-   'ID',
    'SEMI'
 ] + list(reserved.values())
 
-literals = ['=']
+# literals = ['=']
 
 # Regular expression rules for simple tokens
+t_EQ = r'\='
 t_PLUS    = r'\+'
 t_MINUS   = r'-'
 t_TIMES   = r'\*'
@@ -66,19 +68,11 @@ lexer = lex.lex()
 
 import ply.yacc as yacc
 
-names = {}
+ids = {}
 
 def p_statement_assign(p):
-    'expression : ID "=" expression'
-    names[p[1]] = p[3]
-
-def p_expression_name(p):
-    "expression : ID"
-    try:
-        p[0] = names[p[1]]
-    except LookupError:
-        print("Undefined name '%s'" % p[1])
-        p[0] = 0
+    'statement : ID EQ expression SEMI'
+    ids[p[1]] = p[3]
 
 def p_expression_plus(p):
     'expression : expression PLUS term'
@@ -113,8 +107,16 @@ def p_factor_expr(p):
     p[0] = p[2]
 
 def p_statement_print(p):
-    'expression : PRINT LPAREN expression RPAREN SEMI'
+    'statement : PRINT LPAREN expression RPAREN SEMI'
     p[0] = (p[1], p[3])
+
+def p_expression_id(p):
+    "expression : ID"
+    try:
+        p[0] = ids[p[1]]
+    except LookupError:
+        print("Undefined name '%s'" % p[1])
+        p[0] = 0
 
 # Error rule for syntax errors
 def p_error(p):
