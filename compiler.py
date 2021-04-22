@@ -5,6 +5,7 @@
 # tokenizer for a simple expression evaluator for
 # numbers and +,-,*,/
 # ------------------------------------------------------------
+import sys
 import ply.lex as lex
 
 # List of token names.   This is always required
@@ -50,9 +51,6 @@ lexer = lex.lex()
 
 import ply.yacc as yacc
 
-# Get the token map from the lexer.  This is required.
-# from calclex import tokens
-
 def p_expression_plus(p):
     'expression : expression PLUS term'
     p[0] = p[1] + p[3]
@@ -92,11 +90,7 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
-while True:
-   try:
-       s = input('calc > ')
-   except EOFError:
-       break
-   if not s: continue
-   result = parser.parse(s)
-   print(result)
+with open(sys.argv[1]) as f:
+   s = f.read()
+result = parser.parse(s)
+print(result)
