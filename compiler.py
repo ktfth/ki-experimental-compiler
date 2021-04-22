@@ -89,16 +89,28 @@ def p_factor_expr(p):
 
 def p_statement_print(p):
     'expression : PRINT LPAREN expression RPAREN SEMI'
-    p[0] = p[3]
+    p[0] = (p[1], p[3])
 
 # Error rule for syntax errors
 def p_error(p):
     print("Syntax error in input!")
 
 # Build the parser
-parser = yacc.yacc()
+ki = yacc.yacc()
+
+def parser(data, debug=0):
+    ki.error = 0
+    p = ki.parse(data, debug=debug)
+    if ki.error:
+        return None
+    return p
 
 with open(sys.argv[1]) as f:
    data = f.read()
-result = parser.parse(data)
-print(result)
+
+result = parser(data)
+
+if type(result) == tuple and result[0] == 'print':
+    print(result[1])
+else:
+    result
