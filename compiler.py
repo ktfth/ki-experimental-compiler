@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import ply.lex as lex
 
-import ply.lex as lex
-
 # List of token names.   This is always required
 tokens = (
    'NUMBER',
@@ -58,4 +56,5 @@ while True:
     tok = lexer.token()
     if not tok:
         break      # No more input
-    print(tok)
+    # print(tok)
+    print(tok.type, tok.value, tok.lineno, tok.lexpos)
