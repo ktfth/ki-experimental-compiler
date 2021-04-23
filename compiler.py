@@ -7,6 +7,7 @@
 # ------------------------------------------------------------
 import sys
 import ply.lex as lex
+import ply.yacc as yacc
 
 reserved = {
     'print': 'PRINT'
@@ -65,8 +66,6 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
-
-import ply.yacc as yacc
 
 ids = {}
 
